@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Realms;
-
 
 public class Collectible : MonoBehaviour
 {
@@ -18,10 +16,8 @@ public class Collectible : MonoBehaviour
         isCollected = GameManager.gm.GetCollectedStatus(id);
 
         if (isCollected)
-        {
-            GameManager.gm.SetCollected(id);
+        {            
             gameObject.SetActive(false);
-
         }
     }
 }

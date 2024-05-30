@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Realms;
 using TMPro;
-using System;
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager gm;
@@ -37,6 +35,8 @@ public class GameManager : MonoBehaviour
     {
         if (isPlayerDataReady)
             scoreText.text = GetOrCreatePlayerData().Score.ToString();
+        //TODO: teksti asetettaisiin vain startissa sek‰ vain silloin,kun
+        //pistem‰‰r‰ muuttuu
     }
 
     //private void OnDisable()
