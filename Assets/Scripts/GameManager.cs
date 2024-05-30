@@ -2,14 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Realms;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager gm;
 
     public GameObject player;
+    public TextMeshProUGUI scoreText;
 
     Realm realm;
+
+    bool isPlayerDataReady;
 
     private void Awake()
     {
@@ -29,13 +33,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void OnDisable()
+    private void Update()
     {
-        if (realm != null)
-        {
-            realm.Dispose();
-        }
+        if (isPlayerDataReady)
+            scoreText.text = GetOrCreatePlayerData().Score.ToString();
     }
+
+    //private void OnDisable()
+    //{
+    //    if (realm != null)
+    //    {
+    //        realm.Dispose();
+    //    }
+    //}
 
     public PlayerData GetOrCreatePlayerData()
     {
@@ -50,10 +60,12 @@ public class GameManager : MonoBehaviour
                 {
                     Id = "ks",
                     X = 0,
-                    Y = 0
-                }); 
+                    Y = 0,
+                    Score = 0
+                });
             });
         }
+        isPlayerDataReady = true;
         return playerData;
     }
 
@@ -79,7 +91,7 @@ public class GameManager : MonoBehaviour
         PlayerData playerData = GetOrCreatePlayerData();
         return new Vector2(playerData.X, playerData.Y);
     }
-    
+
 
     //Lisätkää joku kerättävä objekti, ja tehkää toiminnalliuus, 
     // jossa pelaajalla on myös score (teksti ruudulla), ja kun pelaaja kerää objektin,
@@ -88,4 +100,46 @@ public class GameManager : MonoBehaviour
     //(itse objekti tulee nyt aina kerättäväksi kun pelin käynnistää, mutta ei haittaa)
     //(jos saat toimimaan, niin koita tehdä vaikka uusi luokka kerättävälle objektille,
     // ja laittaa siihen esim. boolean-arvo, onko esine kerätty vai ei
+
+    public void IncreaseScore(int value)
+    {
+        PlayerData playerData = GetOrCreatePlayerData();
+        realm.Write(() =>
+        {
+            playerData.Score += value;
+        });
+    }
+
+    public void SetCollected()
+    {
+        CollectibleData cd = GetOrCreateCollectibleData();
+        realm.Write(() =>
+        {
+            cd.IsCollected = true;
+        });
+    }
+
+    public CollectibleData GetOrCreateCollectibleData()
+    {
+        CollectibleData cd = realm.Find<CollectibleData>("obj1");
+        if (cd == null) //ei löytynyt kyseilellä käyttäjä id:llä
+        {
+            //luodaan uusi olio PlayerDatasta oletusarvoilla
+            realm.Write(() =>
+            {
+                cd = realm.Add(new CollectibleData()
+                {
+                    Id = "obj1",
+                    IsCollected = false
+                }); ;
+            });
+        }
+        return cd;
+    }
+
+    public bool GetCollectedStatus()
+    {
+        CollectibleData cd = GetOrCreateCollectibleData();
+        return cd.IsCollected;
+    }
 }

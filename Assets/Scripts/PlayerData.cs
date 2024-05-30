@@ -7,4 +7,5 @@ public class PlayerData : RealmObject
 
     public float X { get; set; }
     public float Y { get; set; }
+    public int Score { get; set; }
 }

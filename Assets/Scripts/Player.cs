@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        player = GetComponent<Rigidbody2D>();        
+        player = GetComponent<Rigidbody2D>();
     }
 
     private void Start()
@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
         direction = Input.GetAxis("Horizontal");
 
         if (direction > 0f)
-        {            
+        {
             player.velocity = new Vector2(direction * speed, player.velocity.y);
             //ruma ratkaisu(raskas kun tallentelee koko ajan ->siirrä esim. Save-buttoniin)
             GameManager.gm.SavePosition(player.position);
@@ -40,6 +40,14 @@ public class Player : MonoBehaviour
             player.velocity = new Vector2(0, player.velocity.y);
         }
 
-       
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        GameManager.gm.IncreaseScore(1);
+        GameManager.gm.SetCollected();
+        Destroy(collision.gameObject);
+    }
+
+
 }
