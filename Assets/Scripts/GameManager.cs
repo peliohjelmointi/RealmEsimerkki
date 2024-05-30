@@ -67,4 +67,25 @@ public class GameManager : MonoBehaviour
             playerData.Y = pos.y;
         });
     }
+
+    //Luo GetPosition -metodi, joka palauttaa Vector2-position playerData:sta
+
+    //Tee toiminallisuus, ett‰ kun pelin k‰ynnist‰‰,
+    //pelaajan positio haetaan tallennetusta positiosta
+
+    //Testaa!
+    public Vector2 GetPosition()
+    {
+        PlayerData playerData = GetOrCreatePlayerData();
+        return new Vector2(playerData.X, playerData.Y);
+    }
+    
+
+    //Lis‰tk‰‰ joku ker‰tt‰v‰ objekti, ja tehk‰‰ toiminnalliuus, 
+    // jossa pelaajalla on myˆs score (teksti ruudulla), ja kun pelaaja ker‰‰ objektin,
+    // score kasvaa (ja se myˆs tallennetaan ja haetaan ladattaessa)
+
+    //(itse objekti tulee nyt aina ker‰tt‰v‰ksi kun pelin k‰ynnist‰‰, mutta ei haittaa)
+    //(jos saat toimimaan, niin koita tehd‰ vaikka uusi luokka ker‰tt‰v‰lle objektille,
+    // ja laittaa siihen esim. boolean-arvo, onko esine ker‰tty vai ei
 }

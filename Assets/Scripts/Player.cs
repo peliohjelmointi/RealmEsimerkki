@@ -11,7 +11,12 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        player = GetComponent<Rigidbody2D>();
+        player = GetComponent<Rigidbody2D>();        
+    }
+
+    private void Start()
+    {
+        player.position = GameManager.gm.GetPosition();
     }
 
     void Update()
