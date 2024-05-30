@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    float direction;
+    float horizontalMovement;
+    float verticalMovement;
     Rigidbody2D player;
 
     public float speed = 5f;
@@ -19,33 +20,22 @@ public class Player : MonoBehaviour
         player.position = GameManager.gm.GetPosition();
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        direction = Input.GetAxis("Horizontal");
+        horizontalMovement = Input.GetAxis("Horizontal");
+        verticalMovement = Input.GetAxis("Vertical");
+        Vector2 movement = new Vector2(horizontalMovement, verticalMovement);
 
-        if (direction > 0f)
-        {
-            player.velocity = new Vector2(direction * speed, player.velocity.y);
-            //ruma ratkaisu(raskas kun tallentelee koko ajan ->siirrä esim. Save-buttoniin)
-            GameManager.gm.SavePosition(player.position);
-        }
-        else if (direction < 0f)
-        {
-            player.velocity = new Vector2(direction * speed, player.velocity.y);
-            //ruma ratkaisu(raskas kun tallentelee koko ajan ->siirrä esim. Save-buttoniin)
-            GameManager.gm.SavePosition(player.position);
-        }
-        else
-        {
-            player.velocity = new Vector2(0, player.velocity.y);
-        }
+        player.velocity = new Vector2(movement.x, movement.y) * speed;
+
+        GameManager.gm.SavePosition(player.position);
 
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         GameManager.gm.IncreaseScore(1);
-        GameManager.gm.SetCollected();
+        GameManager.gm.SetCollected(collision.GetComponent<Collectible>().id);
         Destroy(collision.gameObject);
     }
 

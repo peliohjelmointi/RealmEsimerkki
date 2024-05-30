@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Realms;
 using TMPro;
-
+using System;
 public class GameManager : MonoBehaviour
 {
     public static GameManager gm;
@@ -110,18 +110,19 @@ public class GameManager : MonoBehaviour
         });
     }
 
-    public void SetCollected()
+    public void SetCollected(string id)
     {
-        CollectibleData cd = GetOrCreateCollectibleData();
+        CollectibleData cd = GetOrCreateCollectibleData(id);
+    
         realm.Write(() =>
         {
             cd.IsCollected = true;
         });
     }
 
-    public CollectibleData GetOrCreateCollectibleData()
+    public CollectibleData GetOrCreateCollectibleData(string id)
     {
-        CollectibleData cd = realm.Find<CollectibleData>("obj1");
+        CollectibleData cd = realm.Find<CollectibleData>(id);
         if (cd == null) //ei löytynyt kyseilellä käyttäjä id:llä
         {
             //luodaan uusi olio PlayerDatasta oletusarvoilla
@@ -129,17 +130,19 @@ public class GameManager : MonoBehaviour
             {
                 cd = realm.Add(new CollectibleData()
                 {
-                    Id = "obj1",
+                    Id = id,
                     IsCollected = false
-                }); ;
+                });
             });
         }
         return cd;
     }
 
-    public bool GetCollectedStatus()
+
+
+    public bool GetCollectedStatus(string id)
     {
-        CollectibleData cd = GetOrCreateCollectibleData();
+        CollectibleData cd = GetOrCreateCollectibleData(id);
         return cd.IsCollected;
     }
 }
